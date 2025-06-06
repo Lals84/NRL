@@ -1,1 +1,30 @@
+import requests
+from bs4 import BeautifulSoup
+
+def fetch_articles():
+    urls = [
+        'https://www.nrl.com/news/2025/06/05/expert-tipping-round-14/',
+        'https://scplaybook.com.au/blog/2025/06/06/half-backed-punters-special-nrl-round-14-tips',
+        # Add more URLs as needed
+    ]
+    articles = []
+    for url in urls:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # Extract relevant content; this will vary per site
+        content = soup.find('div', class_='article-content')  # Example selector
+        articles.append(str(content))
+    return articles
+
+def save_to_html(articles):
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write('<html><head><title>NRL Tips</title></head><body>')
+        for article in articles:
+            f.write(article)
+            f.write('<hr>')
+        f.write('</body></html>')
+
+if __name__ == "__main__":
+    articles = fetch_articles()
+    save_to_html(articles)
 
